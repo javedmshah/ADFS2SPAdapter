@@ -1,0 +1,52 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.forgerock.demo.federation;
+
+import com.sun.identity.saml2.common.SAML2Exception;
+import com.sun.identity.saml2.plugins.SAML2ServiceProviderAdapter;
+import com.sun.identity.saml2.protocol.AuthnRequest;
+import com.sun.identity.saml2.protocol.Scoping;
+import com.sun.identity.shared.debug.Debug;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author jshah
+ */
+public class ADFSServiceProviderAdapter extends SAML2ServiceProviderAdapter {
+
+    protected Debug debug = Debug.getInstance("ADFSServiceProviderAdapter");
+
+    @Override
+    public void initialize(Map initParams) {
+        if (debug.messageEnabled()) {
+            debug.message("ADFSServiceProviderAdapter.initialize");
+        }
+    }
+
+    @Override
+    public void preSingleSignOnRequest(
+            String hostedEntityID,
+            String idpEntityID,
+            String realm,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthnRequest authnRequest)
+            throws SAML2Exception {
+        if (debug.messageEnabled()) {
+            debug.message("ADFSServiceProviderAdapter.preSingleSignOnRequest");
+        }
+        // ADFS does not support Scoping element
+        authnRequest.setScoping(null);
+        
+        if (debug.messageEnabled()) {
+            debug.message("ADFSServiceProviderAdapter.preSingleSignOnRequest Scoping set to null");
+        }
+    }
+    
+}
